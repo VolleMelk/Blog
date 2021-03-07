@@ -6,6 +6,7 @@ use App\Entity\Post;
 use App\Form\PostFormType;
 use App\Form\PostUpdateFormType;
 use App\Repository\PostRepository;
+use App\Repository\MessageRepository;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,10 +47,11 @@ class PostController extends AbstractController
      * @Route("/show/{post}", name="show")
      *
      * @param Post $post
-     * @return void
+     * @return Response
      */
-    public function show(Post $post)
+    public function show(Post $post, MessageRepository $repository): Response
     {
+
         //needs te return all the message from the post
         return $this->render('post/show.html.twig', ["post" => $post, "messages" => "messages"]);
     }
@@ -137,7 +139,9 @@ class PostController extends AbstractController
 
         $form = $this->createForm(PostUpdateFormType::class, $post);
 
-        return $this->redirectToRoute("post.edit", ['post' => $post->getId()]);
+        $post = $repository->update($post, $request, $this->getDoctrine()->getManager(), $form);
+
+        return $this->redirectToRoute("post.edit", ['post' => $post]);
     }
 
     /**

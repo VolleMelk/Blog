@@ -14,7 +14,7 @@ class PostUpdateFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->setAction('update')
+            ->setAction('/post/update/' . $options['data']->getId())
             ->setMethod('PUT')
             ->add('description', TextType::class, ['required' => true])
             ->add('Submit', SubmitType::class);

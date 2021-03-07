@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PostRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass=PostRepository::class)
@@ -17,15 +19,18 @@ class Post
      */
     private $id;
 
+
     /**
+     * @Assert\Positive
+     * @ORM\Column(type="integer")
+     */
+    private $user_id;
+
+    /**
+     * @Assert\NotBlank
      * @ORM\Column(type="string", length=255)
      */
     private $description;
-
-    /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $user_id;
 
     /**
      * @ORM\Column(type="datetime")
@@ -59,7 +64,7 @@ class Post
         return $this->user_id;
     }
 
-    public function setUserId(?int $user_id): self
+    public function setUserId(int $user_id): self
     {
         $this->user_id = $user_id;
 
