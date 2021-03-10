@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\MessageRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=MessageRepository::class)
@@ -18,20 +19,21 @@ class Message
     private $id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Positive
+     * @ORM\Column(type="integer")
      */
-    private $user_id;
+    private $users_id;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Positive
+     * @ORM\Column(type="integer")
      */
-    private $post_id;
-
+    private $posts_id;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Post", inversedBy="message")
      */
-    private $post;
+    private $posts;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="message")
@@ -66,18 +68,6 @@ class Message
     public function setUserId(?int $user_id): self
     {
         $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function getPostId(): ?int
-    {
-        return $this->post_id;
-    }
-
-    public function setPostId(?int $post_id): self
-    {
-        $this->post_id = $post_id;
 
         return $this;
     }
@@ -118,26 +108,26 @@ class Message
         return $this;
     }
 
-    public function getPost(): ?Post
+    public function getPosts(): ?Post
     {
-        return $this->post;
+        return $this->posts;
     }
 
-    public function setPost(?Post $post): self
+    public function setPosts(?Post $posts): self
     {
-        $this->post = $post;
+        $this->posts = $posts;
 
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getPostsId(): ?int
     {
-        return $this->user;
+        return $this->posts_id;
     }
 
-    public function setUser(?User $user): self
+    public function setPostsId(int $posts_id): self
     {
-        $this->user = $user;
+        $this->posts_id = $posts_id;
 
         return $this;
     }
@@ -150,6 +140,18 @@ class Message
     public function setUsers(?User $users): self
     {
         $this->users = $users;
+
+        return $this;
+    }
+
+    public function getUsersId(): ?int
+    {
+        return $this->users_id;
+    }
+
+    public function setUsersId(int $users_id): self
+    {
+        $this->users_id = $users_id;
 
         return $this;
     }

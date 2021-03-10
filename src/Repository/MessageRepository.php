@@ -2,9 +2,14 @@
 
 namespace App\Repository;
 
+use DateTime;
+use App\Entity\Post;
+use App\Entity\User;
 use App\Entity\Message;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 
 /**
  * @method Message|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,32 +24,69 @@ class MessageRepository extends ServiceEntityRepository
         parent::__construct($registry, Message::class);
     }
 
-    // /**
-    //  * @return Message[] Returns an array of Message objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function index(Post $post)
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $messages = $this->findBy(['posts_id' => $post->getId()]);
 
-    /*
-    public function findOneBySomeField($value): ?Message
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $messages;
     }
-    */
+
+    /**
+     * Store Post recource to database
+     *
+     * @param User $user
+     * @param Message $message
+     * @param Request $request
+     * @param ObjectManager $entityManager
+     * @return integer
+     */
+    public function store(User $user, Message $message, Request $request, ObjectManager $entityManager): int
+    {
+        $post = $entityManager->getRepository(Post::class)->find($request->get('post'));
+
+        $message->setUsersId($user->getId());
+        $message->setUsers($user);
+        $message->setPostsId((int) $post->getId());
+        $message->setBody($request->get('body'));
+        $message->setCreatedAt(new DateTime("now"));
+        $message->setUpdatedAt(new DateTime("now"));
+        $message->setPosts($post);
+
+        $entityManager->persist($message);
+        $entityManager->flush();
+
+        return $message->getPostsId();
+    }
+
+    /**
+     * Update Message recource
+     *
+     * @param Message $message
+     * @param Request $request
+     * @param ObjectManager $entityManager
+     * @return integer
+     */
+    public function update(Message $message, Request $request, ObjectManager $entityManager): int
+    {
+        $message->setBody($request->get('body'));
+
+        $entityManager->flush();
+
+        return $message->getPostsId();
+    }
+
+    /**
+     * Delete Message recource
+     *
+     * @param Message $message
+     * @param ObjectManager $entityManager
+     * @return boolean
+     */
+    public function delete(Message $message, ObjectManager $entityManager): bool
+    {
+        $entityManager->remove($message);
+        $entityManager->flush();
+
+        return true;
+    }
 }

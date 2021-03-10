@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use DateTime;
 use App\Entity\Post;
 use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
@@ -30,9 +31,9 @@ class PostRepository extends ServiceEntityRepository
      */
     public function index(): array
     {
-        $qr = $this->createQueryBuilder('post')->select("post")->orderBy('post.id', 'DESC');
+        $queryResult = $this->createQueryBuilder('post')->select("post")->orderBy('post.id', 'DESC');
 
-        return $qr->getQuery()->getResult();
+        return $queryResult->getQuery()->getResult();
     }
 
     /**
@@ -45,10 +46,10 @@ class PostRepository extends ServiceEntityRepository
     public function store(User $user, Post $post, Request $request, ObjectManager $entityManager, FormInterface $form): int
     {
         $form->handleRequest($request);
-        $post->setCreatedAt(new \DateTime("now"));
-        $post->setUpdatedAt(new \DateTime("now"));
+        $post->setCreatedAt(new DateTime("now"));
+        $post->setUpdatedAt(new DateTime("now"));
         $post->setUserId($user->getId());
-        // $post->addUser($user);
+        $post->setUsers($user);
 
         $entityManager->persist($post);
 
@@ -69,7 +70,7 @@ class PostRepository extends ServiceEntityRepository
     public function update(Post $post, Request $request, ObjectManager $entityManager, FormInterface $form): int
     {
         $form->handleRequest($request);
-        $post->setUpdatedAt(new \DateTime("now"));
+        $post->setUpdatedAt(new DateTime('now'));
 
         $entityManager->flush();
 
@@ -88,7 +89,7 @@ class PostRepository extends ServiceEntityRepository
     public function delete(User $user, Post $post, ObjectManager $entityManager): bool
     {
 
-        if ($user->getId() !== $post->getUserId()) {
+        if ($user->getId() !== $post->getUsersId()) {
 
             return false;
         }

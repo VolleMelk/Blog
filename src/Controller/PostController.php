@@ -51,9 +51,11 @@ class PostController extends AbstractController
      */
     public function show(Post $post, MessageRepository $repository): Response
     {
+        $user = $this->getUser();
 
-        //needs te return all the message from the post
-        return $this->render('post/show.html.twig', ["post" => $post, "messages" => "messages"]);
+        $messages = $repository->index($post);
+
+        return $this->render('post/show.html.twig', ["post" => $post, "messages" => $messages, 'user' => $user]);
     }
 
     /**
@@ -103,7 +105,7 @@ class PostController extends AbstractController
     {
         $user = $this->getUser();
 
-        if ($user->getId() !== $post->getUserId()) {
+        if ($user->getId() !== $post->getUsersId()) {
             $this->addFlash('succes', 'You are not autorized to edit post');
 
             return $this->render('post/index.html.twig');
@@ -131,7 +133,7 @@ class PostController extends AbstractController
     {
         $user = $this->getUser();
 
-        if ($user->getId() !== $post->getUserId()) {
+        if ($user->getId() !== $post->getUsersId()) {
             $this->addFlash('succes', 'You are not autorized to edit post');
 
             return $this->render('post/index.html.twig');
@@ -154,7 +156,7 @@ class PostController extends AbstractController
      * @param PostRepository $repository
      * @return void
      */
-    public function delete(Post $post, Request $request, PostRepository $repository): Response
+    public function delete(Post $post, PostRepository $repository): Response
     {
         $user = $this->getUser();
         $postDeleted = $repository->delete($user, $post, $this->getDoctrine()->getManager());

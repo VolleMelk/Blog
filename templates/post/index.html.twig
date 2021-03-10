@@ -32,7 +32,7 @@
                                 <td>
                                     <a href="{{ path('post.show', {post: post.id})}}">{{ post.description }}</a>
                                 </td>
-                                {% if post.getUserId is same as(user.id)  %}
+                                {% if post.getUsersId is same as(user.id)  %}
                                     <td>
                                        <a class="btn" href="{{ path('post.edit', { post: post.id })}}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
