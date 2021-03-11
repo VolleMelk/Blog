@@ -3,19 +3,26 @@
 {% block title %} Edit Message for post: {{ message.getPosts().description()}} {% endblock %}
 
 {% block body %}
-
-    <h1> Edit post message for: {{ message.getPosts().description()}} </h1>
-
-    <form method="POST" action="{{ path('message.update', { message: message.id })}}">
-        <div class="mb-3">
-            <label for="formGroupExampleInput" class="form-label">Body</label>
-            <input type="text" class="form-control" id="body" name="body" value="{{message.body}}" required>       
-            <button type="submit" class="btn btn-primary" style="margin-top: 2%">
-                Update Message
-            </button>   
-        </div>
+        {% for message in app.flashes('succes') %}
         
-    </form> 
+            <div class="flash-notice">
+                {{ message }}
+            </div>
+
+        {% endfor %}
+    <div class="col-sm">
+        <h1> Edit post message for: {{ message.getPosts().description()}} </h1>
+        <form method="POST" action="{{ path('message.update', { message: message.id })}}">
+            <div class="mb-3">
+                <label for="formGroupExampleInput" class="form-label">Body</label>
+                <input type="text" class="form-control" id="body" name="body" value="{{message.body}}" required>       
+                <button type="submit" class="btn btn-primary" style="margin-top: 2%">
+                    Update Message
+                </button>   
+            </div>
+
+        </form> 
+    </div>
 
 {% endblock %}
 

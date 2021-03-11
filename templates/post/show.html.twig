@@ -53,7 +53,7 @@
                                 <td>
                                     {{ message.body }}
                                 </td>
-                                {% if message.getUsersId is same as(user.id) or message.getPosts.getUsersId is same as(user.id) %}
+                                {% if message.getUsersId is same as(user.id) %}
                                     <td>
                                        <a class="btn" href="{{ path('message.edit', { message: message.id })}}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil" viewBox="0 0 16 16">
@@ -61,6 +61,12 @@
                                             </svg>
                                         </a>                                    
                                     </td>
+                                        {% else %}
+                                            <td></td>
+                                            <td></td>
+                                {% endif %}
+
+                                {% if message.getUsersId is same as(user.id) or message.getPosts.getUsersId is same as(user.id) %}
                                     <td>
                                        <a class="btn" href="{{ path('message.delete', { message: message.id })}}">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">

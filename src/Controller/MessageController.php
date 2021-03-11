@@ -73,13 +73,14 @@ class MessageController extends AbstractController
     {
         $user = $this->getUser();
 
+        $form = $this->createForm(MessageFormType::class, new Message());
+
         if ($user->getId() !== $message->getUsersId()) {
             $this->addFlash('succes', 'You are not autorized to edit post');
 
-            return $this->render('post/index.html.twig');
+            return $this->render('message/edit.html.twig', ['message' => $message, 'form' => $form->createView()]);
         }
 
-        $form = $this->createForm(MessageFormType::class, new Message());
 
         return $this->render('message/edit.html.twig', [
             'message' => $message,
