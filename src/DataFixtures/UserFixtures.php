@@ -2,19 +2,22 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\User;
 use DateTime;
+use Faker\Factory;
+use App\Entity\User;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserFixtures extends Fixture
 {
+    private $faker;
     private $encoder;
 
     public function __construct(UserPasswordEncoderInterface $encoder)
     {
         $this->encoder = $encoder;
+        $this->faker   = Factory::create();
     }
 
     public function load(ObjectManager $manager)
